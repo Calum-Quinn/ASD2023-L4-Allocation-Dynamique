@@ -2,7 +2,7 @@
 
 Le but de cet exercice est de passer le codecheck suivant : 
 
-    [https://codecheck.io/files/2104121332d4y630pc13cyzg9rbr4bqjnnm](https://codecheck.io/files/2104121332d4y630pc13cyzg9rbr4bqjnnm)
+[https://codecheck.io/files/2104121332d4y630pc13cyzg9rbr4bqjnnm](https://codecheck.io/files/2104121332d4y630pc13cyzg9rbr4bqjnnm)
 
 Le code C++ de ce codecheck est disponible dans ce répertoire. Le seul fichier qui doit 
 être modifié est le fichier main.cpp, et ce uniquement entre les 6 paires de commentaires 
