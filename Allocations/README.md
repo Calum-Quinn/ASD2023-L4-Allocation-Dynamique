@@ -63,7 +63,7 @@ leave f4
 d(9) d(10) d(11)
 leave main
 d(1) d(2)
-~~
+~~~
 
 N'hésitez pas à revoir les videos suivantes pour vous inspirer
 
