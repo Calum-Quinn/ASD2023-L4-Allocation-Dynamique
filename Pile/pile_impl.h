@@ -50,6 +50,8 @@ template <typename T>
 Pile<T>::Pile(const Pile& other) {
    //Le constructeur de copie effectue une copie de la Pile reçue en
    // paramètre avec la même capacité que celle-ci.
+   capacite = other.capacite;
+   this = other;
 }
 
 template <typename T>
@@ -64,6 +66,9 @@ Pile<T>& Pile<T>::operator= ( const Pile& other ) {
    // si la taille de la Pile à copier est inférieure ou égale à la capacité
    // courante de la pile, on ne réalloue pas de mémoire.
    // Par contre, si la capacité actuelle est trop faible, on réalloue.
+   if (other.taille > this->capacite) {
+      //Réallouer de la mémoire
+   }
 }
 
 
