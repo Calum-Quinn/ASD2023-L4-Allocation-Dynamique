@@ -82,6 +82,7 @@ int main() {
    C* cf4_2;
    f4(cf4_2,1);
    delete[] cf4;
+
    delete cf4_2;
 
 
