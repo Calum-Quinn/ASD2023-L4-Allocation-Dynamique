@@ -33,11 +33,8 @@ C* f2() {
     enter("f2");
     C* p;
 // AJOUTEZ VOTRE CODE ICI ...
-
    C* q = new C[2]{C(++cnt),C(++cnt)};
-
    p = q;
-
 // ... FIN DE VOTRE CODE
     leave("f2");
     return p;
@@ -46,8 +43,7 @@ C* f2() {
 void f3(C* p) noexcept {
     enter("f3");
 // AJOUTEZ VOTRE CODE ICI ...
- //p = new C(++cnt);
-   C* q = new((void*)(p)) C{C(++cnt)};
+   new((void*)(p)) C{C(++cnt)};
 // ... FIN DE VOTRE CODE
     leave("f3");
 }
@@ -55,10 +51,9 @@ void f3(C* p) noexcept {
 void f4(C* p, size_t n) noexcept {
     enter("f4");
 // AJOUTEZ VOTRE CODE ICI ...
-for(size_t i = 0; i < n; i++){
-	new (&p[i]) C{++cnt};
-}
-   //p = new C[2]{C(++cnt),C(++cnt)};
+	for(size_t i = 0; i < n; i++){
+		new (&p[i]) C{++cnt};
+	}
 // ... FIN DE VOTRE CODE
     leave("f4");
 }
@@ -87,10 +82,10 @@ int main() {
 	delete (C*)(c8);
 
 	void* cf4_2 = ::operator new(sizeof(C));
-   f4((C*)cf4_2,1);
+	f4((C*)cf4_2,1);
 
 	for(size_t i = 0; i < 2; ++i){
-		std::destroy_at(&((C*)cf4)[i]);
+		(((C*)cf4)[i]).~C();
 	}
 
 	::operator delete(cf4);
