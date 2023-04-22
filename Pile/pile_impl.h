@@ -20,7 +20,11 @@ Pile<T>::Pile(size_t n) {
 template <typename T>
 Pile<T>::~Pile() {
    //Détruire les éléments et libérer la mémoire
-   delete data;
+   for (size_t i = 0; i < taille; ++i) {
+//      destroy_at(&data[i*sizeof(T)]);
+      data[i*sizeof(T)].~T();
+   }
+   ::operator delete(data);
 }
 
 template <typename T>
@@ -77,9 +81,9 @@ void Pile<T>::swap(Pile& other) noexcept {
    //La méthode swap échange le contenu des 2 piles en offrant une garantie noexcept.
    // Elle doit vous aider à mettre en oeuvre un des cas de l'opérateur d'affectation.
    if (this != &other) {
-      swap(this->taille,other.taille);
-      swap(this->capacite,other.capacite);
-      swap(this->data,other.data);
+      std::swap(taille,other.taille);
+      std::swap(capacite,other.capacite);
+      std::swap(data,other.data);
    }
 }
 
@@ -94,26 +98,34 @@ Pile<T>& Pile<T>::operator= ( const Pile& other ) {
 
    if (other.taille > this->capacite) {
       //Réallouer de la mémoire
-      data = (T*)realloc(data, sizeof(T)*other.taille);
-   }
-
-   if (taille <= other.taille) {
-      for (size_t i = 0; i < taille; ++i) {
-         data[i*sizeof(T)] = other.data[i*sizeof(T)];
-      }
-      for (size_t j = taille; j < other.taille; ++j) {
-         new(&data[j*sizeof(T)]) T(other.data[j*sizeof(T)]);
-         ++taille;
-      }
+//      data = (T*)realloc(data, sizeof(T)*other.taille);
+//      T* temp = (T*)(::operator new(other.taille*sizeof(T)));
+//      delete data;
+//      data = temp;
+      Pile<T> temp(other);
+      swap(temp);
    }
    else {
-      for (size_t i = 0; i < other.taille; ++i) {
-         data[i*sizeof(T)] = other.data[i*sizeof(T)];
+      if (taille <= other.taille) {
+         for (size_t i = 0; i < taille; ++i) {
+            data[i*sizeof(T)] = other.data[i*sizeof(T)];
+         }
+         for (size_t j = taille; j < other.taille; ++j) {
+            new(&data[j*sizeof(T)]) T(other.data[j*sizeof(T)]);
+            ++taille;
+         }
       }
-      for (size_t j = other.taille; j < taille; ++j) {
-         pop();
+      else {
+         for (size_t i = 0; i < other.taille; ++i) {
+            data[i*sizeof(T)] = other.data[i*sizeof(T)];
+         }
+         for (size_t j = other.taille; j < taille; ++j) {
+            pop();
+         }
       }
    }
+
+
 
 //   for (size_t i = 0; i < other.taille; ++i) {
 //      data[i*sizeof(T)] = other.data[i*sizeof(T)];
