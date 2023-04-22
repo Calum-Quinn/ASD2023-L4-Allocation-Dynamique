@@ -33,7 +33,7 @@ int main() {
     cout << endl << "** Pile<T> p3(5) + push(1) **" << endl;
     Pile<T> p3(5);
     p3.push(1);
-    cout << endl << "** p3 = p1 "" " << endl;
+    cout << endl << "** p3 = p1 ** " << endl;
     p3 = p1;
     cout << endl << "** videLaPile(p3) **" << endl;
     videLaPile(p3);

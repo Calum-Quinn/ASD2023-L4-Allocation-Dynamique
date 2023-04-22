@@ -6,35 +6,46 @@
 
 // AJOUTEZ VOTRE CODE ICI ...
 
+#include <algorithm>
+using namespace std;
+
 template <typename T>
 Pile<T>::Pile(size_t n) {
    //Doit allouer la mémoire pour n éléments de type T (sans les construire)
-   data = (T*)(::operator new[](n*sizeof(T)));
+   data = (T*)(::operator new(n*sizeof(T)));
+   capacite = n;
+   taille = 0;
 }
 
 template <typename T>
 Pile<T>::~Pile() {
    //Détruire les éléments et libérer la mémoire
-   delete[] data;
+   delete data;
 }
 
 template <typename T>
 void Pile<T>::push(T e) {
    //La méthode push doit construire un élément en construisant
    //par déplacement l'objet passé en paramètre à la bonne addresse mémoire.
-   *(data + taille) = e;
-   ++taille;
+   if(taille < capacite) {
+      new(&data[taille*sizeof(T)]) T(move(e));
+      ++taille;
+   }
 }
 
 template <typename T>
 void Pile<T>::pop() {
    //pop doit détruire l'élément au sommet sans libérer de mémoire.
-   --taille;
+   // détruire le dernier élément
+   if (taille > 0) {
+      destroy_at(&top());
+      --taille;
+   }
 }
 
 template <typename T>
 const T& Pile<T>::top() const {
-   return *(data + taille - 1);
+   return data[(taille - 1)*sizeof(T)];
 }
 
 template <typename T>
@@ -51,8 +62,14 @@ template <typename T>
 Pile<T>::Pile(const Pile& other) {
    //Le constructeur de copie effectue une copie de la Pile reçue en
    // paramètre avec la même capacité que celle-ci.
+   taille = 0;
+   data = (T*)(::operator new(other.capacite*sizeof(T)));
    capacite = other.capacite;
-   *this = other;
+   for(size_t i = 0; i < other.taille; ++i) {
+      new(&data[taille*sizeof(T)]) T(other.data[i*sizeof(T)]);
+      ++taille;
+   }
+//   *this = other;
 }
 
 template <typename T>
@@ -75,20 +92,41 @@ Pile<T>& Pile<T>::operator= ( const Pile& other ) {
    if (this == &other)
       return *this;
 
-
-
    if (other.taille > this->capacite) {
       //Réallouer de la mémoire
-//      Pile temp{other};
-
-      T* temp = T(::operator new [](other.taille * sizeof(T)));
-      delete[] data;
-      data = temp;
-      taille = other.taille;
-//      swap(other);
+      data = (T*)realloc(data, sizeof(T)*other.taille);
    }
 
-   copy(other.data, other.data + other.taille, data);
+   if (taille <= other.taille) {
+      for (size_t i = 0; i < taille; ++i) {
+         data[i*sizeof(T)] = other.data[i*sizeof(T)];
+      }
+      for (size_t j = taille; j < other.taille; ++j) {
+         new(&data[j*sizeof(T)]) T(other.data[j*sizeof(T)]);
+         ++taille;
+      }
+   }
+   else {
+      for (size_t i = 0; i < other.taille; ++i) {
+         data[i*sizeof(T)] = other.data[i*sizeof(T)];
+      }
+      for (size_t j = other.taille; j < taille; ++j) {
+         pop();
+      }
+   }
+
+//   for (size_t i = 0; i < other.taille; ++i) {
+//      data[i*sizeof(T)] = other.data[i*sizeof(T)];
+//   }
+//   if (taille )
+
+//   for(size_t i = 1; i < other.taille; ++i) {
+//      new(&data[taille*sizeof(T)]) T(other.data[i*sizeof(T)]);
+//      ++taille;
+//   }
+
+//   copy(other.data, other.data + other.taille * sizeof(T), data);
+//   taille = other.taille;
 
    return *this;
 }

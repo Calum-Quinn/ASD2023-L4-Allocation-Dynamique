@@ -19,7 +19,7 @@ C::C(C&& c) noexcept : _i(c._i) {
 }
 
 C& C::operator= (const C& other) {
-    _i = other._i;
+   _i = other._i;
     cout << "ca(" << _i << ") ";
     return *this;
 }
@@ -41,3 +41,4 @@ std::ostream& operator<< (std::ostream& s, const C& c)
 C::~C() {
     cout << "d(" << _i << ") ";
 }
+
