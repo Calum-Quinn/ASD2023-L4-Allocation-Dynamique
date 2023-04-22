@@ -35,6 +35,9 @@ void Pile<T>::push(T e) {
       new(&data[taille]) T(std::move(e));
       ++taille;
    }
+   else {
+      throw out_of_range("Push");
+   }
 }
 
 template <typename T>
@@ -45,11 +48,14 @@ void Pile<T>::pop() {
       std::destroy_at(&top());
       --taille;
    }
+   else {
+      throw out_of_range("Pop");
+   }
 }
 
 template <typename T>
 const T& Pile<T>::top() const {
-   return data[(taille - 1)*sizeof(T)];
+   return data[(taille - 1)];
 }
 
 template <typename T>
@@ -70,10 +76,9 @@ Pile<T>::Pile(const Pile& other) {
    data = (T*)(::operator new(other.capacite*sizeof(T)));
    capacite = other.capacite;
    for(size_t i = 0; i < other.taille; ++i) {
-      new(&data[taille*sizeof(T)]) T(other.data[i*sizeof(T)]);
+      new(&data[taille]) T(other.data[i]);
       ++taille;
    }
-//   *this = other;
 }
 
 template <typename T>
@@ -98,47 +103,28 @@ Pile<T>& Pile<T>::operator= ( const Pile& other ) {
 
    if (other.taille > this->capacite) {
       //Réallouer de la mémoire
-//      data = (T*)realloc(data, sizeof(T)*other.taille);
-//      T* temp = (T*)(::operator new(other.taille*sizeof(T)));
-//      delete data;
-//      data = temp;
       Pile<T> temp(other);
       swap(temp);
    }
    else {
       if (taille <= other.taille) {
          for (size_t i = 0; i < taille; ++i) {
-            data[i*sizeof(T)] = other.data[i*sizeof(T)];
+            data[i] = other.data[i];
          }
          for (size_t j = taille; j < other.taille; ++j) {
-            new(&data[j*sizeof(T)]) T(other.data[j*sizeof(T)]);
+            new(&data[j]) T(other.data[j]);
             ++taille;
          }
       }
       else {
          for (size_t i = 0; i < other.taille; ++i) {
-            data[i*sizeof(T)] = other.data[i*sizeof(T)];
+            data[i] = other.data[i];
          }
          for (size_t j = other.taille; j < taille; ++j) {
             pop();
          }
       }
    }
-
-
-
-//   for (size_t i = 0; i < other.taille; ++i) {
-//      data[i*sizeof(T)] = other.data[i*sizeof(T)];
-//   }
-//   if (taille )
-
-//   for(size_t i = 1; i < other.taille; ++i) {
-//      new(&data[taille*sizeof(T)]) T(other.data[i*sizeof(T)]);
-//      ++taille;
-//   }
-
-//   copy(other.data, other.data + other.taille * sizeof(T), data);
-//   taille = other.taille;
 
    return *this;
 }
