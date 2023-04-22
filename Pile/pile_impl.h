@@ -22,7 +22,7 @@ Pile<T>::~Pile() {
    //Détruire les éléments et libérer la mémoire
    for (size_t i = 0; i < taille; ++i) {
 //      destroy_at(&data[i*sizeof(T)]);
-      data[i*sizeof(T)].~T();
+      data[i].~T();
    }
    ::operator delete(data);
 }
@@ -32,7 +32,7 @@ void Pile<T>::push(T e) {
    //La méthode push doit construire un élément en construisant
    //par déplacement l'objet passé en paramètre à la bonne addresse mémoire.
    if(taille < capacite) {
-      new(&data[taille*sizeof(T)]) T(move(e));
+      new(&data[taille]) T(std::move(e));
       ++taille;
    }
 }
@@ -42,7 +42,7 @@ void Pile<T>::pop() {
    //pop doit détruire l'élément au sommet sans libérer de mémoire.
    // détruire le dernier élément
    if (taille > 0) {
-      destroy_at(&top());
+      std::destroy_at(&top());
       --taille;
    }
 }
