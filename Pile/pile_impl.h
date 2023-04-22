@@ -21,7 +21,6 @@ template <typename T>
 Pile<T>::~Pile() {
    //Détruire les éléments et libérer la mémoire
    for (size_t i = 0; i < taille; ++i) {
-//      destroy_at(&data[i*sizeof(T)]);
       data[i].~T();
    }
    ::operator delete(data);
@@ -55,6 +54,9 @@ void Pile<T>::pop() {
 
 template <typename T>
 const T& Pile<T>::top() const {
+   if(!taille) {
+      throw out_of_range("top");
+   }
    return data[(taille - 1)];
 }
 
@@ -128,8 +130,6 @@ Pile<T>& Pile<T>::operator= ( const Pile& other ) {
 
    return *this;
 }
-
-
 
 // ... FIN DE VOTRE CODE
 
